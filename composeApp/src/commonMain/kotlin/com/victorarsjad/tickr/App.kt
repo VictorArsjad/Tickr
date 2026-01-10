@@ -12,15 +12,16 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import com.victorarsjad.tickr.di.Dependencies
 import com.victorarsjad.tickr.ui.FeedScreen
 import com.victorarsjad.tickr.ui.FeedViewModel
+import com.victorarsjad.tickr.ui.theme.TickrTheme
 
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    TickrTheme {
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialTheme.colorScheme.background)
                 .safeContentPadding()
                 .fillMaxSize(),
         ) {

@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.victorarsjad.tickr.ui.theme.TickrTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,13 +25,15 @@ class MainActivity : ComponentActivity() {
         val feedVm: FeedViewModel by inject()
         val reportVm: ReportViewModel by inject()
         setContent {
-            var route by remember { mutableStateOf<Screen>(Screen.Feed) }
-            when (val r = route) {
-                is Screen.Feed -> FeedScreen(feedVm, onNavigateToReport = { id ->
-                    route = Screen.Report(id)
-                    reportVm.loadReport(id, Period.DAY)
-                })
-                is Screen.Report -> ReportScreen(reportVm, r.tickrId, onBack = { route = Screen.Feed })
+            TickrTheme {
+                var route by remember { mutableStateOf<Screen>(Screen.Feed) }
+                when (val r = route) {
+                    is Screen.Feed -> FeedScreen(feedVm, onNavigateToReport = { id ->
+                        route = Screen.Report(id)
+                        reportVm.loadReport(id, Period.DAY)
+                    })
+                    is Screen.Report -> ReportScreen(reportVm, r.tickrId, onBack = { route = Screen.Feed })
+                }
             }
         }
     }

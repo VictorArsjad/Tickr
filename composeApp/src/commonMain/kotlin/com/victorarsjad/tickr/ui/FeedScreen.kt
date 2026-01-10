@@ -56,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.victorarsjad.tickr.domain.model.Period
 import com.victorarsjad.tickr.domain.model.Tickr
 import com.victorarsjad.tickr.domain.model.TickrType
@@ -166,7 +167,8 @@ private fun CreationBar(
             value = name,
             onValueChange = onNameChange,
             placeholder = { Text("What do you want to track today?") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp)
         )
         Row(
             modifier = Modifier.fillMaxWidth(),

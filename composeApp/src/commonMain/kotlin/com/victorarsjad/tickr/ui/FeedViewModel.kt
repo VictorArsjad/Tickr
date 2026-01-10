@@ -65,7 +65,7 @@ class FeedViewModel(
         scope.launch {
             while (true) {
                 updateTimerValues()
-                val interval = if (_state.value.activeSessions.isNotEmpty()) 100L else 1000L
+                val interval = if (_state.value.activeSessions.isNotEmpty()) 50L else 1000L
                 kotlinx.coroutines.delay(interval)
             }
         }
