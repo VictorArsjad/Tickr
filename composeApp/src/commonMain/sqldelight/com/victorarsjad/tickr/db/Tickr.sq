@@ -1,0 +1,95 @@
+CREATE TABLE tickr (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('COUNT', 'TIME')),
+  period TEXT NOT NULL CHECK (period IN ('DAY', 'WEEK', 'MONTH', 'LIFETIME')),
+  createdAt INTEGER NOT NULL,
+  updatedAt INTEGER NOT NULL,
+  isDeleted INTEGER DEFAULT 0
+);
+
+getAllTickrs:
+SELECT * FROM tickr WHERE isDeleted = 0 ORDER BY createdAt DESC;
+
+getTickrById:
+SELECT * FROM tickr WHERE id = ? AND isDeleted = 0;
+
+insertTickr:
+INSERT INTO tickr (id, name, type, period, createdAt, updatedAt, isDeleted)
+VALUES (?, ?, ?, ?, ?, ?, 0);
+
+softDeleteTickr:
+UPDATE tickr SET isDeleted = 1, updatedAt = ? WHERE id = ?;
+
+updateTickr:
+UPDATE tickr SET name = ?, type = ?, period = ?, updatedAt = ? WHERE id = ?;
+
+CREATE TABLE countTickrValue (
+  id TEXT PRIMARY KEY,
+  tickrId TEXT NOT NULL REFERENCES tickr(id),
+  value INTEGER NOT NULL DEFAULT 0,
+  periodStartAt INTEGER NOT NULL,
+  periodEndAt INTEGER,
+  createdAt INTEGER NOT NULL,
+  updatedAt INTEGER NOT NULL
+);
+
+getCurrentCountValue:
+SELECT * FROM countTickrValue WHERE tickrId = ? AND periodEndAt IS NULL;
+
+getCountValueByPeriod:
+SELECT * FROM countTickrValue WHERE tickrId = ? AND periodStartAt = ?;
+
+getAllCountValuesForTickr:
+SELECT * FROM countTickrValue WHERE tickrId = ? ORDER BY periodStartAt DESC;
+
+insertCountValue:
+INSERT INTO countTickrValue (id, tickrId, value, periodStartAt, createdAt, updatedAt)
+VALUES (?, ?, ?, ?, ?, ?);
+
+incrementCountValue:
+UPDATE countTickrValue SET value = value + 1, updatedAt = ? WHERE id = ?;
+
+updateCountValue:
+UPDATE countTickrValue SET value = ?, updatedAt = ? WHERE id = ?;
+
+archiveCountValue:
+UPDATE countTickrValue SET periodEndAt = ?, updatedAt = ? WHERE id = ?;
+
+CREATE TABLE timeSession (
+  id TEXT PRIMARY KEY,
+  tickrId TEXT NOT NULL REFERENCES tickr(id),
+  startedAt INTEGER NOT NULL,
+  endedAt INTEGER,
+  createdAt INTEGER NOT NULL,
+  updatedAt INTEGER NOT NULL
+);
+
+getSessionsForTickr:
+SELECT * FROM timeSession WHERE tickrId = ? ORDER BY startedAt DESC;
+
+getActiveSessionForTickr:
+SELECT * FROM timeSession WHERE tickrId = ? AND endedAt IS NULL LIMIT 1;
+
+getSessionsForPeriod:
+SELECT * FROM timeSession
+WHERE tickrId = ? AND startedAt >= ? AND startedAt < ?
+ORDER BY startedAt DESC;
+
+getTotalDurationForPeriod:
+SELECT COALESCE(SUM(COALESCE(endedAt, ?) - startedAt), 0) AS total
+FROM timeSession
+WHERE tickrId = ? AND startedAt >= ? AND startedAt < ?;
+
+insertSession:
+INSERT INTO timeSession (id, tickrId, startedAt, createdAt, updatedAt)
+VALUES (?, ?, ?, ?, ?);
+
+stopSession:
+UPDATE timeSession SET endedAt = ?, updatedAt = ? WHERE id = ?;
+
+deleteSession:
+DELETE FROM timeSession WHERE id = ?;
+
+getActiveSessions:
+SELECT * FROM timeSession WHERE endedAt IS NULL;
