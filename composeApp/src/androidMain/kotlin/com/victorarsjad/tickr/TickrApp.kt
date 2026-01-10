@@ -15,7 +15,10 @@ import com.victorarsjad.tickr.domain.usecase.StartSessionUseCase
 import com.victorarsjad.tickr.domain.usecase.StopSessionUseCase
 import com.victorarsjad.tickr.ui.FeedViewModel
 import com.victorarsjad.tickr.ui.ReportViewModel
+import com.victorarsjad.tickr.ui.SettingsViewModel
 import com.victorarsjad.tickr.util.UUIDGenerator
+import com.victorarsjad.tickr.domain.repository.SettingsRepository
+import com.victorarsjad.tickr.settings.AndroidSettingsRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -34,8 +37,10 @@ class TickrApp : Application() {
             single { StartSessionUseCase(get(), get()) }
             single { StopSessionUseCase(get()) }
             single { GetReportDataUseCase(get(), get()) }
+            single<SettingsRepository> { AndroidSettingsRepository(androidContext()) }
             factory { FeedViewModel(get(), get(), get(), get(), get(), get()) }
             factory { ReportViewModel(get()) }
+            factory { SettingsViewModel(get()) }
         }
         startKoin {
             androidContext(this@TickrApp)

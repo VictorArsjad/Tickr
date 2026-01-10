@@ -18,6 +18,7 @@ sqldelight = "2.2.1"
 datetime = "0.6.1"
 uuid = "0.8.4"
 koin = "3.5.6"
+androidx-datastore = "1.1.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -38,6 +39,7 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 benasher-uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
